@@ -2,5 +2,5 @@
 (module msu
     *
   (import scheme chicken posix extras irregex)
-  (include "main.scm")
+   (include "main.scm")
   )
