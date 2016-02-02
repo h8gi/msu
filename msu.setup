@@ -1,0 +1,11 @@
+;;; msu.setup
+
+;;; コンパイル
+(compile -s -O3 -d1 "msu.scm" -j msu)
+(compile -s -O3 -d0 "msu.import.scm")
+
+;;; インストール
+(install-extension
+ 'msu
+ '("msu.so" "msu.import.so")
+ '((version 1.0)))

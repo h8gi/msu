@@ -1,0 +1,6 @@
+;;; msu.meta
+((author "yagihiroki")
+ (synopsis "msu")
+ (license "GPLv3")
+ (files "main.scm" "msu.scm" "msu.setup" "msu.meta"))
+ 
