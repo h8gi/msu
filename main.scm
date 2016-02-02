@@ -1,5 +1,6 @@
 ;;; "hello ${(+ 3 5)}" => "hello 5"
-(define (expand-string str)
+;;; expand-string
+(define (es str)
   (irregex-replace/all
    '(: "$" "{" ($ (*? any)) "}") str
    (lambda (m)
