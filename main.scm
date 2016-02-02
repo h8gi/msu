@@ -1,5 +1,3 @@
-(use irregex)
-
 ;;; "hello ${(+ 3 5)}" => "hello 5"
 (define (expand-string str)
   (irregex-replace/all
