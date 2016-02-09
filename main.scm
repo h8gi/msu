@@ -63,8 +63,8 @@
   (define (inner acc exp)
     (let ([ch (read-char)])
       (cond 
-       [(char=? ch #\")
-        `(conc ,@(reverse! (cons exp acc)))]
+       [(char=? ch #\")        
+        `(conc ,@(reverse! (cons exp acc)))        ]
        [(char=? ch #\\)
         (let ([next (read-char)])
           (case next
@@ -77,11 +77,17 @@
             [(#\v) (inner acc (conc exp #\vtab))]
             [(#\f) (inner acc (conc exp #\page))]
             [else  (inner acc (conc exp next))]))]
-       [(char=? ch #\$)
-        (inner (cons (read) (cons exp acc)) "")]
+       [(char=? ch #\$)                 ; substitute expression in ${exp} or $exp
+        (if (char=? (peek-char) #\{)
+            (begin (read-char)
+                   (let* ([n-exp (read)])
+                     (read-char)
+                     (inner (cons n-exp (cons exp acc)) "")))
+            (inner (cons (read) (cons exp acc)) ""))]
        [else (inner acc (conc exp ch))])))
   (with-input-from-port port
     (lambda () (inner '() ""))))
+
 
 ;;; syntax
 ;;; "hello ${(+ 3 5)}" => "hello 5"
