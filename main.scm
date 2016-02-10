@@ -1,5 +1,5 @@
-(use utf8 srfi-1)
-(define (fill-string str limit #!key (fill #\0) (right? #f))
+(use utf8 srfi-1 socket)
+(define (zero-fill str limit #!key (fill #\0) (right? #f))
   (let ([dif (- limit (string-length str))])
     (if (>= dif 0)
         (if right?
@@ -62,9 +62,9 @@
 (define (es-read #!optional (port (current-input-port)))
   (define (inner acc exp)
     (let ([ch (read-char)])
-      (cond 
+      (cond
        [(char=? ch #\")        
-        `(conc ,@(reverse! (cons exp acc)))        ]
+        `(conc ,@(reverse! (cons exp acc)))]
        [(char=? ch #\\)
         (let ([next (read-char)])
           (case next
@@ -94,3 +94,24 @@
 (set-sharp-read-syntax!
  #\"
  es-read)
+
+;;; macro
+
+(define-syntax while/cc
+  (syntax-rules ()
+    [(_ return test body ...)
+     (call/cc
+      (lambda (return)
+        (let loop ()
+          (when test
+            body ...
+            (loop)))))]))
+
+;;; socket send 
+(define (socket-send-all-to so buf saddr)
+  (when (= (fold (lambda (msg len)
+                   (socket-send-to so msg saddr))
+                 0
+                 (string-chop (if (blob? buf) (blob->string buf) buf) (socket-send-size)))
+           (socket-send-size))
+    (socket-send-to so "" saddr)))
