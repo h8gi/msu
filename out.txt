@@ -1,0 +1,7 @@
+Trying 130.158.64.133...
+Connected to smtpgwin.cc.tsukuba.ac.jp.
+Escape character is '^]'.
+220 mgwsv02.cc.tsukuba.ac.jp ESMTP
+250 mgwsv02.cc.tsukuba.ac.jp
+
+telnet> Connection closed.

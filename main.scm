@@ -17,6 +17,17 @@
       (proc line)
       (loop (read-line port)))))
 
+(define (read-until char #!optional (include? #f) (port (current-input-port)))
+  (with-output-to-string
+      (lambda ()
+        (with-input-from-port port
+          (lambda ()
+            (let loop ([ch (peek-char)])
+              (cond [(char=? char ch) (when include? (read-char) (display ch))]
+                    [else (read-char)
+                          (display ch)
+                          (loop (peek-char))])))))))
+
 ;;; statistics
 (define (sum-n-mean lst)
   (define (inner lst sum n)
@@ -107,11 +118,3 @@
             body ...
             (loop)))))]))
 
-;;; socket send 
-(define (socket-send-all-to so buf saddr)
-  (when (= (fold (lambda (msg len)
-                   (socket-send-to so msg saddr))
-                 0
-                 (string-chop (if (blob? buf) (blob->string buf) buf) (socket-send-size)))
-           (socket-send-size))
-    (socket-send-to so "" saddr)))
