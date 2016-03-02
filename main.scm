@@ -28,21 +28,6 @@
                           (display ch)
                           (loop (peek-char))])))))))
 
-;;; statistics
-(define (sum-n-mean lst)
-  (define (inner lst sum n)
-    (cond ((null? lst) (values sum n (/ sum n)))
-          (else (inner (cdr lst) (+ (car lst) sum) (add1 n)))))
-  (inner lst 0 0))
-(define (sum lst)
-  (define (inner lst s)
-    (cond ((null? lst) s)
-          (else (inner (cdr lst) (+ (car lst) s)))))
-  (inner lst 0))
-
-(define (mean lst)
-  (let-values ([(s n m) (sum-n-mean lst)])
-    m))
 ;;; python's range
 (define range
   (let ([range-inner
@@ -118,3 +103,10 @@
             body ...
             (loop)))))]))
 
+(define-syntax collect
+  (syntax-rules ()
+    [(_ num expr)
+     (let loop ([n num] 
+                [acc '()])
+       (if (zero? n) acc
+           (loop (sub1 n) (cons expr acc))))]))
